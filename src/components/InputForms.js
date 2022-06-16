@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './style.css'
+import './Style.css'
 function InputForms() {
     return(
       <div className="form">
