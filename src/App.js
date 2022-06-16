@@ -1,8 +1,14 @@
 import React from 'react';
-
+import Header from './components/Header';
+import InputForms from './components/InputForms';
 function App() {
-  const value = 'To my another World \n Hope you are well \n Happy Coding';
-  return <div>Hello {value}</div>;
+  return (
+    <div className="App">
+      <Header/>
+      <InputForms />
+    </div>
+  );
 }
+
 
 export default App;
