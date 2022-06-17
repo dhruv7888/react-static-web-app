@@ -47,8 +47,35 @@ function InputForms() {
             setMdsEndpoint(value);
         }
     }
+    const handleFileChange = (e) =>
+    {
+        setCertificate(e.target.files[0]);
+    }
 
     const handleSubmit  = () => {
+        var data={};
+        data["DGrepEndpoint"]=DGrepEndpoint;
+        data["Namespace"]=Namespace;
+        data["MdsEndpoint"]=MdsEndpoint;
+        data["TimeStampWindow"]=TimeStampWindow;
+        data["RepititiveTaskId"]=RepititiveTaskId;
+        data["EventName"]=EventName;
+        data["ColumnName"]=ColumnName;
+        data["ServiceFormat"]=ServiceFormat;
+        data["SystemIdColumnName"]=SystemIdColumnName;
+        data["Namespace"]=Namespace;
+        data["ExternalIdColumnName"]=ExternalIdColumnName;
+        data["Certificate"]=Certificate;
+        data["CertificateName"]=Certificate.name;    
+        var json=JSON.stringify(data);
+       var v =  fetch("/api/hello?name="+data,{
+            method: 'GET'
+        });/*
+        fetch("https://api20220617072943.azurewebsites.net/api/hello?name="+data,{
+            method: 'GET'
+        });*/
+        console.log(v);
+        console.log(json);
         console.log(DGrepEndpoint,MdsEndpoint,Namespace,EventName,ColumnName,ServiceFormat,SystemIdColumnName,ExternalIdColumnName,RepititiveTaskId,TimeStampWindow);
     }
 
@@ -114,7 +141,7 @@ function InputForms() {
               </div>
               <div className="Certificate">
                   <label className="form__label" for="Certificate">Certificate : </label>
-                  <input className="form__input" type="file" id="Certificate"/>
+                  <input className="form__input" type="file" onChange={(e) => handleFileChange(e)} id="Certificate"/>
               </div>
           </div>
           <div class="footer">
