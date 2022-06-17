@@ -36,7 +36,7 @@ namespace api
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             name = name ?? data?.name;
-            if (!string.IsNullOrEmpty(name))
+            /*if (!string.IsNullOrEmpty(name))
             {
                 string accountName = "dhruv7888";
                 var storageUri = "https://dhruv7888.table.core.windows.net/";
@@ -78,7 +78,7 @@ namespace api
                     {"CertificateName",data["CertificateName"]},
                 };
                 tableClient.AddEntity(entity);
-            }
+            }*/
             string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
