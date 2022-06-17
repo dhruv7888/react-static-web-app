@@ -73,6 +73,7 @@ function InputForms() {
         }).then((myJson) => {
             console.log(myJson);
         });
+        console.log(data);
 }
 
     return(
