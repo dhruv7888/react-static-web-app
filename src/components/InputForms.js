@@ -74,6 +74,15 @@ function InputForms() {
         fetch("https://api20220617072943.azurewebsites.net/api/hello?name="+data,{
             method: 'GET'
         });*/
+
+        fetch('/api/hello')
+  .then((response) => {
+    return response.json();
+  })
+  .then((myJson) => {
+    console.log(myJson);
+  });
+
         console.log(v);
         console.log(json);
         console.log(DGrepEndpoint,MdsEndpoint,Namespace,EventName,ColumnName,ServiceFormat,SystemIdColumnName,ExternalIdColumnName,RepititiveTaskId,TimeStampWindow);
