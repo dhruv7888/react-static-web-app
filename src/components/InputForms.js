@@ -68,25 +68,12 @@ function InputForms() {
         data["Certificate"]=Certificate;
         data["CertificateName"]=Certificate.name;    
         var json=JSON.stringify(data);
-       var v =  fetch("/api/hello?name="+data,{
-            method: 'GET'
-        });/*
-        fetch("https://api20220617072943.azurewebsites.net/api/hello?name="+data,{
-            method: 'GET'
-        });*/
-
-        fetch('/api/hello')
-  .then((response) => {
-    return response.json();
-  })
-  .then((myJson) => {
-    console.log(myJson);
-  });
-
-        console.log(v);
-        console.log(json);
-        console.log(DGrepEndpoint,MdsEndpoint,Namespace,EventName,ColumnName,ServiceFormat,SystemIdColumnName,ExternalIdColumnName,RepititiveTaskId,TimeStampWindow);
-    }
+        fetch('/api/hello?name='+json).then((response) => {
+        return response.json();
+        }).then((myJson) => {
+            console.log(myJson);
+        });
+}
 
     return(
       <div className="form">
