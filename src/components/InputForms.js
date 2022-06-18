@@ -68,13 +68,10 @@ function InputForms() {
         data["Certificate"]=Certificate;
         data["CertificateName"]=Certificate.name;    
         var json=JSON.stringify(data);
-        fetch('/api/hello?name='+json).then((response) => {
+        fetch(`/api/hello?name=`+json).then((response) => {
         return response.json();
-        }).then((myJson) => {
-            console.log(myJson);
         });
-        console.log(data);
-}
+    }
 
     return(
       <div className="form">
