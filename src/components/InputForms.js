@@ -13,7 +13,8 @@ function InputForms() {
     const [RepititiveTaskId,setRepititiveTaskId] = useState(null);
     const [TimeStampWindow,setTimeStampWindow] = useState(null);
     const [Certificate,setCertificate] = useState(null);
-
+    const [CertificateRawData,setCertificateRawData] = useState(null);
+    
     const handleInputChange = (e) => {
         const {id , value} = e.target;
         if(id === "Namespace"){
@@ -47,11 +48,26 @@ function InputForms() {
             setMdsEndpoint(value);
         }
     }
-    const handleFileChange = (e) =>
+    const handleFileChange = async(e) =>
     {
         setCertificate(e.target.files[0]);
+        const get_file_array = (file) => {
+            return new Promise((acc, err) => {
+                const reader = new FileReader();
+                reader.onload = (event) => { acc(event.target.result) };
+                reader.onerror = (err)  => { err(err) };
+                reader.readAsArrayBuffer(file);
+            });
+         }
+         const temp = await get_file_array(e.target.files[0]);
+         console.log(temp);
+         console.log(10);
+         setCertificateRawData(temp);
     }
-
+    const crypto = require('crypto');
+    const fs = require('fs');
+    const forge = require('node-forge');
+    const https = require('https');
     const handleSubmit  = () => {
         var data={};
         data["DGrepEndpoint"]=DGrepEndpoint;
@@ -65,14 +81,27 @@ function InputForms() {
         data["SystemIdColumnName"]=SystemIdColumnName;
         data["Namespace"]=Namespace;
         data["ExternalIdColumnName"]=ExternalIdColumnName;
-        data["Certificate"]=Certificate;
-        data["CertificateName"]=Certificate.name;    
+        // data["Certificate"]=Certificate;
+        data["CertificateName"]=Certificate.name;
+        // data["CertificateRawData"]=CertificateRawData;
+        // console.log(data["CertificateRawData"]);
+
+        //data["CertificateRawData"] = (new crypto.X509Certificate(fs.readFileSync(Certificate))).raw;    
+        
         var json=JSON.stringify(data);
+        
+        //console.log(json["CertificateRawData"]);
         fetch(`/api/hello?name=`+json).then((response) => {
         return response.json();
         });
+        
+        // const data2=new FormData();
+        // data2.append("Certificate",Certificate);
+        // fetch("/api/Http",{
+        //     method: 'post', body: data
+        // }).then(res=>console.log(res))
+        // .catch(error=>console.log(error));
     }
-
     return(
       <div className="form">
           <div className="form-body">
