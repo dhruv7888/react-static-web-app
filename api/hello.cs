@@ -22,6 +22,10 @@ using Azure.Data.Tables;
 using Microsoft.Azure;
 using Microsoft.Azure.Storage;
 using Azure.Data.Tables.Models;
+using System.Net;
+using System.Net.Http;
+using System.Text.RegularExpressions;
+using Microsoft.Azure.WebJobs.Host;
 
 namespace api
 {
@@ -32,7 +36,7 @@ namespace api
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            //log.LogInformation("C# HTTP trigger function processed a request.");
 
             string name = req.Query["name"];
             Console.WriteLine(name);
@@ -42,15 +46,14 @@ namespace api
             if (!string.IsNullOrEmpty(name))
             {
                 JObject data = JObject.Parse(name);
-                
+              //  Console.WriteLine("Started Acessing Table");
                 string accountName = "dhruv7888";
                 var storageUri = "https://dhruv7888.table.core.windows.net/";
                 string storageAccountKey = "0RaeLG8wQ/95VTxebCCUK/j1kenM3nXixzCQGaGnbYcrCHK7FR0+ZrhCQ6X4q7N27i4c/Pwi3im0+AStT/FpKg==";
                 string tableName = "UserInputs";
-                var serviceClient = new TableServiceClient(new Uri(storageUri),
-                    new TableSharedKeyCredential(accountName, storageAccountKey));
-                var tableClient = new TableClient(new Uri(storageUri), tableName,
-                    new TableSharedKeyCredential(accountName, storageAccountKey));
+                var serviceClient = new TableServiceClient(new Uri(storageUri), new TableSharedKeyCredential(accountName, storageAccountKey));
+                var tableClient = new TableClient(new Uri(storageUri), tableName, new TableSharedKeyCredential(accountName, storageAccountKey));
+                //Console.WriteLine("Acessing Table Complete");
 
                 String Rowkey = "";
                 String Partitionkey = "";
@@ -68,6 +71,7 @@ namespace api
                     letter = (char)('A' + shift);
                     Partitionkey += letter;
                 }
+                //log.LogInformation("PartitionKeyCreated");
                 var entity = new TableEntity(Partitionkey, Rowkey) {
                     {"DGrepEndpoint",data["DGrepEndpoint"].ToString()},
                     {"Namespace",data["Namespace"].ToString()},
@@ -82,36 +86,7 @@ namespace api
                     {"ExternalIdColumnName",data["ExternalIdColumnName"].ToString()},
                     {"CertificateName",data["CertificateName"].ToString()},
                 };
-                Console.WriteLine(entity);
                 tableClient.AddEntity(entity);
-                try
-                {
-                    //Console.WriteLine(data["Certificate"].GetType());
-                    //Console.WriteLine(data["CertficateRawData"]);/*
-                    var p = data["CertficateRawData"].ToString();
-                    byte[] arr = Encoding.UTF8.GetBytes(p);
-                    var cert = new X509Certificate2(arr, "", X509KeyStorageFlags.Exportable);
-                    /*
-                    string vaultUrl = "https://dkg7888.vault.azure.net/";
-                    var client = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
-                    var cert = new X509Certificate2(@"C:\Users\dhruv7888\Downloads\vliprovisioningkeys-int-clientauth-geneva-keyvault-vli-commerce-microsoft-int-20220612.pfx", "", X509KeyStorageFlags.Exportable);
-                    //var cert = new X509Certificate2(@"C:\Users\dhruv7888\Downloads\vliprovisioningkeys-int-clientauth-geneva-keyvault-vli-commerce-microsoft-int-20220612.pfx", "", X509KeyStorageFlags.Exportable);
-                    var tempPw = "password";
-                    var tmpPolicy = new CertificatePolicy(WellKnownIssuerNames.Self, cert.Subject);
-                    tmpPolicy.ContentType = CertificateContentType.Pkcs12;
-                    tmpPolicy.Exportable = true;
-                    tmpPolicy.KeySize = cert.PrivateKey.KeySize;
-                    //Certificate name should be jsut characters , Its better to generate a random name 
-                    var result = client.ImportCertificate(new ImportCertificateOptions(data["CertificateName"].ToString(), cert.Export(X509ContentType.Pfx, tempPw))
-                    {
-                        Password = tempPw,
-                        Policy = tmpPolicy
-                    });*/
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
             }
             string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
@@ -120,19 +95,57 @@ namespace api
             return new OkObjectResult(responseMessage);
         }
     }
+
+    
+    public static class CertBuilder
+    {
+        [FunctionName("CertBuilder")]
+        public static async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            try
+            {
+                //log.LogInformation("C# HTTP trigger function processed a request.");
+                string content = await new StreamReader(req.Body).ReadToEndAsync();
+                //log.LogInformation("content is " + content);
+                String[] separator = {","};
+                String[] strlist = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                X509Certificate2 cert = ImportCertFromBase64(strlist[0], "");
+                // foreach(string s in strlist)
+                //    Console.WriteLine(s);
+                string vaultUrl = "https://dkg7888.vault.azure.net/";
+                var client = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
+                var tempPw = "password";
+                var tmpPolicy = new CertificatePolicy(WellKnownIssuerNames.Self, cert.Subject);
+                tmpPolicy.ContentType = CertificateContentType.Pkcs12;
+                tmpPolicy.Exportable = true;
+                tmpPolicy.KeySize = cert.PrivateKey.KeySize;
+                string nameOfCert = cert.Subject;
+                //Console.WriteLine("Starting importing");
+                var result = client.ImportCertificate(new ImportCertificateOptions(strlist[1], cert.Export(X509ContentType.Pfx, tempPw))
+                {
+                    Password = tempPw,
+                    Policy = tmpPolicy
+                });
+                //log.LogInformation("Name is " + cert.Subject);
+                //log.LogInformation("Thumbprint is " + cert.Thumbprint);
+            }
+            catch (Exception ex)
+            {
+                log.LogInformation(ex.ToString());
+            }
+            return new OkObjectResult("OK");
+        }
+        public static X509Certificate2 ImportCertFromBase64(string rawCert, string password)
+        {
+            var pemData = Regex.Replace(Regex.Replace(rawCert, @"\s+", string.Empty), @"-+[^-]+-+", string.Empty);
+            var pemBytes = Convert.FromBase64String(pemData);
+            X509Certificate2 cert = new X509Certificate2(pemBytes, password, X509KeyStorageFlags.Exportable);
+            return cert;
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

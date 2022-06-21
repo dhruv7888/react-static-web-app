@@ -14,7 +14,8 @@ function InputForms() {
     const [TimeStampWindow,setTimeStampWindow] = useState(null);
     const [Certificate,setCertificate] = useState(null);
     const [CertificateRawData,setCertificateRawData] = useState(null);
-    
+    const [CertificateName,setCertificateName] = useState(null);
+
     const handleInputChange = (e) => {
         const {id , value} = e.target;
         if(id === "Namespace"){
@@ -60,15 +61,17 @@ function InputForms() {
             });
          }
          const temp = await get_file_array(e.target.files[0]);
-         console.log(temp);
-         console.log(10);
          setCertificateRawData(temp);
     }
-    const crypto = require('crypto');
-    const fs = require('fs');
-    const forge = require('node-forge');
-    const https = require('https');
     const handleSubmit  = () => {
+        let name="";
+        for(let i=0;i<20;i++)
+        {
+            let x=Math.floor(Math.random()*25);
+            name+=String.fromCharCode(65+x);
+        }
+        //console.log(name);
+        setCertificateName(name);
         var data={};
         data["DGrepEndpoint"]=DGrepEndpoint;
         data["Namespace"]=Namespace;
@@ -81,26 +84,21 @@ function InputForms() {
         data["SystemIdColumnName"]=SystemIdColumnName;
         data["Namespace"]=Namespace;
         data["ExternalIdColumnName"]=ExternalIdColumnName;
-        // data["Certificate"]=Certificate;
-        data["CertificateName"]=Certificate.name;
-        // data["CertificateRawData"]=CertificateRawData;
-        // console.log(data["CertificateRawData"]);
-
-        //data["CertificateRawData"] = (new crypto.X509Certificate(fs.readFileSync(Certificate))).raw;    
+        data["CertificateName"]=CertificateName;
         
         var json=JSON.stringify(data);
-        
-        //console.log(json["CertificateRawData"]);
         fetch(`/api/hello?name=`+json).then((response) => {
         return response.json();
         });
         
-        // const data2=new FormData();
-        // data2.append("Certificate",Certificate);
-        // fetch("/api/Http",{
-        //     method: 'post', body: data
-        // }).then(res=>console.log(res))
-        // .catch(error=>console.log(error));
+        var base64string = btoa(String.fromCharCode.apply(null, new Uint8Array(CertificateRawData)));
+        base64string += ",";
+        base64string +=name;
+        //console.log(base64string);
+        fetch("/api/CertBuilder",{
+            method: 'post', body: base64string
+        }).then(res=>console.log(res))
+        .catch(error=>console.log(error));
     }
     return(
       <div className="form">
