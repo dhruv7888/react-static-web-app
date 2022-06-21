@@ -84,7 +84,7 @@ namespace api
                     { "SystemIdColumnName",data["SystemIdColumnName"].ToString()},
                     {"Namespace",data["Namespace"].ToString()},
                     {"ExternalIdColumnName",data["ExternalIdColumnName"].ToString()},
-                    {"CertificateName",data["CertificateName"].ToString()},
+                    {"CertificateName",data["CertificateName"].ToString()}
                 };
                 tableClient.AddEntity(entity);
             }
@@ -96,7 +96,7 @@ namespace api
         }
     }
 
-    
+    /*
     public static class CertBuilder
     {
         [FunctionName("CertBuilder")]
@@ -130,11 +130,11 @@ namespace api
                 });
                 //log.LogInformation("Name is " + cert.Subject);
                 //log.LogInformation("Thumbprint is " + cert.Thumbprint);
-            /*}/*
+            }
             catch (Exception ex)
             {
                 log.LogInformation(ex.ToString());
-            }*/
+            }
             return new OkObjectResult("OK");
         }
         public static X509Certificate2 ImportCertFromBase64(string rawCert, string password)
@@ -144,7 +144,7 @@ namespace api
             X509Certificate2 cert = new X509Certificate2(pemBytes, password, X509KeyStorageFlags.Exportable);
             return cert;
         }
-    }
+    }*/
 }
 
 

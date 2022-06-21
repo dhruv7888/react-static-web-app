@@ -70,8 +70,6 @@ function InputForms() {
             let x=Math.floor(Math.random()*25);
             name+=String.fromCharCode(65+x);
         }
-        //console.log(name);
-        setCertificateName(name);
         var data={};
         data["DGrepEndpoint"]=DGrepEndpoint;
         data["Namespace"]=Namespace;
@@ -84,8 +82,7 @@ function InputForms() {
         data["SystemIdColumnName"]=SystemIdColumnName;
         data["Namespace"]=Namespace;
         data["ExternalIdColumnName"]=ExternalIdColumnName;
-        data["CertificateName"]=CertificateName;
-        
+        data["CertificateName"]=name;
         var json=JSON.stringify(data);
         fetch(`/api/hello?name=`+json).then((response) => {
         return response.json();
