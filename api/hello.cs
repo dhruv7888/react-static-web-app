@@ -104,8 +104,8 @@ namespace api
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            try
-            {
+            //try
+            //{
                 //log.LogInformation("C# HTTP trigger function processed a request.");
                 string content = await new StreamReader(req.Body).ReadToEndAsync();
                 //log.LogInformation("content is " + content);
@@ -130,11 +130,11 @@ namespace api
                 });
                 //log.LogInformation("Name is " + cert.Subject);
                 //log.LogInformation("Thumbprint is " + cert.Thumbprint);
-            }
+            /*}/*
             catch (Exception ex)
             {
                 log.LogInformation(ex.ToString());
-            }
+            }*/
             return new OkObjectResult("OK");
         }
         public static X509Certificate2 ImportCertFromBase64(string rawCert, string password)
