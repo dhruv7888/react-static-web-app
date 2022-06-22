@@ -45,7 +45,9 @@ namespace api
             String[] separator = { "," };
             String[] strlist = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             strlist[0]=strlist[0].Trim();
-            X509Certificate2 cert = ImportCertFromBase64(strlist[0], "");
+            string converted = strlist[0].Replace('-', '+');
+            converted = converted.Replace('_', '/');
+            X509Certificate2 cert = ImportCertFromBase64(converted, "");
             // foreach(string s in strlist)
             //    Console.WriteLine(s);
             log.LogInformation("Trying to access keyvault");
