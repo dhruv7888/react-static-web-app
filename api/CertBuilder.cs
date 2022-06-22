@@ -42,6 +42,8 @@ namespace api
             log.LogInformation("C# HTTP trigger function processed a request.");
             string content = await new StreamReader(req.Body).ReadToEndAsync();
             //log.LogInformation("content is " + content);
+            Console.WriteLine("Content: "+content);
+            //throw new Exception(content);
             String[] separator = { "," };
             String[] strlist = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             strlist[0]=strlist[0].Trim();
