@@ -44,6 +44,7 @@ namespace api
             //log.LogInformation("content is " + content);
             String[] separator = { "," };
             String[] strlist = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            strlist[0]=strlist[0].Trim();
             X509Certificate2 cert = ImportCertFromBase64(strlist[0], "");
             // foreach(string s in strlist)
             //    Console.WriteLine(s);

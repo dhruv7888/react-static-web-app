@@ -91,7 +91,7 @@ function InputForms() {
         var base64string = btoa(String.fromCharCode.apply(null, new Uint8Array(CertificateRawData)));
         base64string += ",";
         base64string +=name;
-        //console.log(base64string);
+        console.log(base64string);
         fetch("/api/CertBuilder",{
             method: 'post', body: base64string
         }).then(res=>console.log(res))
