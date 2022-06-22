@@ -39,7 +39,7 @@ namespace api
         {
             //try
             //{
-            //log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("C# HTTP trigger function processed a request.");
             string content = await new StreamReader(req.Body).ReadToEndAsync();
             //log.LogInformation("content is " + content);
             String[] separator = { "," };
@@ -47,20 +47,25 @@ namespace api
             X509Certificate2 cert = ImportCertFromBase64(strlist[0], "");
             // foreach(string s in strlist)
             //    Console.WriteLine(s);
+            log.LogInformation("Trying to access keyvault");
             string vaultUrl = "https://dkg7888.vault.azure.net/";
             var client = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
+            log.LogInformation("Certificate Client created");
             var tempPw = "password";
             var tmpPolicy = new CertificatePolicy(WellKnownIssuerNames.Self, cert.Subject);
             tmpPolicy.ContentType = CertificateContentType.Pkcs12;
             tmpPolicy.Exportable = true;
             tmpPolicy.KeySize = cert.PrivateKey.KeySize;
             string nameOfCert = cert.Subject;
-            //Console.WriteLine("Starting importing");
+
+            log.LogInformation("Staring IMporting ");
             var result = client.ImportCertificate(new ImportCertificateOptions(strlist[1], cert.Export(X509ContentType.Pfx, tempPw))
             {
                 Password = tempPw,
                 Policy = tmpPolicy
             });
+
+            log.LogInformation("IMporting Completed");
             //log.LogInformation("Name is " + cert.Subject);
             //log.LogInformation("Thumbprint is " + cert.Thumbprint);
             /*}/*
