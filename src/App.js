@@ -1,5 +1,5 @@
 import React from 'react';
-import Nav from './Nav.js';
+//import Nav from './Nav.js';
 import InputForms from './components/InputForms';
 import ReactFlowRenderer from './ReactFlowRenderer';
 import {
