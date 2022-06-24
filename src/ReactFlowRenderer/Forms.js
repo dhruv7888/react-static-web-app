@@ -91,11 +91,6 @@ function Forms() {
                         <button type="submit" class="btn" onClick={()=>handleSubmit()} >Register</button>
                     </div>
                 </div>      
-            <div className="Link">
-                <nav>
-                    <Link to="/" className="LinkText">Service-Details</Link>
-                </nav>
-            </div>
             </>
         );
     }

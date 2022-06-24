@@ -174,11 +174,6 @@ function InputForms() {
                 <button type="submit" class="btn" onClick={()=>handleSubmit()} >Register</button>
             </div>
         </div>      
-        <div className="Link">
-            <nav>
-                <Link to="/ReactFlowRenderer" className="LinkText">Code-Flow</Link>
-            </nav>
-        </div>
         </>
     )       
 }

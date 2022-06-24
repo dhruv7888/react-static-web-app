@@ -128,11 +128,6 @@ function ReactFlowRenderer(props) {
         connectionLineType={ConnectionLineType.SmoothStep}
       />
     </div>
-    <div className="Link">
-      <nav>
-          <Link to="/">Service-Details</Link>
-      </nav>
-    </div>
     </>
   );
 }
