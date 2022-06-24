@@ -1,12 +1,21 @@
 import React from 'react';
-import Header from './components/Header';
+import Nav from './Nav.js';
 import InputForms from './components/InputForms';
+import ReactFlowRenderer from './ReactFlowRenderer';
+import {
+  BrowserRouter as Router,Routes,Route,
+} from "react-router-dom";
+
 function App() {
   return (
-    <div className="App">
-      <Header/>
-      <InputForms />
-    </div>
+    <>
+    <Router>
+      <Routes>
+        <Route index element={<InputForms />} />
+        <Route path="/ReactFlowRenderer" element={< ReactFlowRenderer />} />
+      </Routes>
+    </Router>
+    </>
   );
 }
 

@@ -3,6 +3,9 @@ body{
     background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7); 
     background: linear-gradient(to right, #2c3e50, #bdc3c7); 
 }
+p{
+    font-size:8px;
+}
 .navi{
     justify-content: center;
 }
