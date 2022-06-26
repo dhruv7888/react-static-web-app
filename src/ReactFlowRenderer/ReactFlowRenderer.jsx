@@ -115,7 +115,7 @@ function ReactFlowRenderer(props) {
   }
   return (
     <>
-    <div style={{ height: "100vh", margin: "10px" }}>
+    <div style={{ height: "100vh", margin: "0px" }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}

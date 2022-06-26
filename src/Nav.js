@@ -34,7 +34,7 @@ function Nav() {
         <li>Service-Details</li>
       </NavLink>
       <NavLink to="/ReactFlowRenderer" activeClassName="current" exact>
-        <li>Code-Flow</li>
+        <li>Design-Flow</li>
       </NavLink>
     </NavUnlisted>
     </div>

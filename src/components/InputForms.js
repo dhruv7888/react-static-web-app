@@ -12,47 +12,43 @@ function InputForms() {
     const [MdsEndpoint, setMdsEndpoint] = useState("BillingPROD");
     const [Namespace, setNamespace] = useState(null);
     const [EventName,setEventName] = useState(null);
-    const [ColumnName,setColumnName] = useState(null);
-    const [ServiceFormat, setServiceFormat] = useState(null);
-    const [SystemIdColumnName, setSystemIdColumnName] = useState(null);
-    const [ExternalIdColumnName, setExternalIdColumnName] = useState(null);
-    const [RepititiveTaskId,setRepititiveTaskId] = useState(null);
-    const [TimeStampWindow,setTimeStampWindow] = useState(null);
+    const [ServiceName,setServiceName] = useState(null);
+    const [APIName, setAPIName] = useState(null);
+    const [ExternalServiceName, setExternalServiceName] = useState(null);
+    const [ExternalAPIName, setExternalAPIName] = useState(null);
+    const [ExternalCallType,setExternalCallType] = useState(null);
     const [Certificate,setCertificate] = useState(null);
     const [CertificateRawData,setCertificateRawData] = useState(null);
     const [CertificateName,setCertificateName] = useState(null);
 
     const handleInputChange = (e) => {
         const {id , value} = e.target;
+        if(id === "DGrepEndpoint"){
+            setDGrepEndpoint(value);
+        }
+        else if(id === "MdsEndpoint"){
+            setMdsEndpoint(value);
+        }
         if(id === "Namespace"){
             setNamespace(value);
         }
         else if(id === "EventName"){
             setEventName(value);
         }
-        else if(id === "ColumnName"){
-            setColumnName(value);
+        else if(id === "ServiceName"){
+            setServiceName(value);
         }
-        else if(id === "ServiceFormat"){
-            setServiceFormat(value);
+        else if(id === "APIName"){
+            setAPIName(value);
         }
-        else if(id === "SystemIdColumnName"){
-            setSystemIdColumnName(value);
+        else if(id === "ExternalServiceName"){
+            setExternalServiceName(value);
         }
-        else if(id === "ExternalIdColumnName"){
-            setExternalIdColumnName(value);
+        else if(id === "ExternalAPIName"){
+            setExternalAPIName(value);
         }
-        else if(id === "RepititiveTaskId"){
-            setRepititiveTaskId(value);
-        }
-        else if(id === "TimeStampWindow"){
-            setTimeStampWindow(value);
-        }
-        else if(id === "DGrepEndpoint"){
-            setDGrepEndpoint(value);
-        }
-        else if(id === "MdsEndpoint"){
-            setMdsEndpoint(value);
+        else if(id === "ExternalCallType"){
+            setExternalCallType(value);
         }
     }
     const handleFileChange = async(e) =>
@@ -78,16 +74,14 @@ function InputForms() {
         }
         var data={};
         data["DGrepEndpoint"]=DGrepEndpoint;
-        data["Namespace"]=Namespace;
         data["MdsEndpoint"]=MdsEndpoint;
-        data["TimeStampWindow"]=TimeStampWindow;
-        data["RepititiveTaskId"]=RepititiveTaskId;
-        data["EventName"]=EventName;
-        data["ColumnName"]=ColumnName;
-        data["ServiceFormat"]=ServiceFormat;
-        data["SystemIdColumnName"]=SystemIdColumnName;
         data["Namespace"]=Namespace;
-        data["ExternalIdColumnName"]=ExternalIdColumnName;
+        data["EventName"]=EventName;
+        data["ServiceName"]=ServiceName;
+        data["APIName"]=APIName;
+        data["ExternalServiceName"]=ExternalServiceName;
+        data["ExternalAPIName"]=ExternalAPIName;
+        data["ExternalCallType"]=ExternalCallType;
         data["CertificateName"]=name;
         var json=JSON.stringify(data);
         fetch(`/api/hello?name=`+json).then((response) => {
@@ -118,20 +112,19 @@ function InputForms() {
                         <option value="USSec">USSec</option>
                         <option value="USNat">USNat</option>
                     </select>
-                    </div>
-                    <div className="MdsEndpoint">
-                        <label className="form__label" for="MdsEndpoint">MdsEndpoint : </label>
-                        <select name="MdsEndpoint" id="MdsEndpoint" className="form__input" value={MdsEndpoint} onChange = {(e) => handleInputChange(e)} >
-                            <option value="BillingPROD">Billing PROD</option>
-                            <option value="CAFairfax">CA Fairfax</option>
-                            <option value="CAMooncake">CA Mooncake</option>
-                            <option value="DiagnosticsPROD">Diagnostics PROD</option>
-                            <option value="ExternalPROD">External PROD</option>
-                            <option value="FirstPartyPROD">FirstParty PROD</option>
-                            <option value="Smoke">Smoke</option>
-                            <option value="Stage">Stage</option>
-                            <option value="Test">Test</option>
-                        </select>
+                </div>
+                <div className="MdsEndpoint">
+                    <label className="form__label" for="MdsEndpoint">MdsEndpoint : </label>
+                    <select name="MdsEndpoint" id="MdsEndpoint" className="form__input" value={MdsEndpoint} onChange = {(e) => handleInputChange(e)} >
+                        <option value="BlackForest">Black Forest</option>
+                        <option value="CAFairfax">CA Fairfax</option>
+                        <option value="CAMooncake">CA Mooncake</option>
+                        <option value="DiagnosticsPROD">Diagnostics PROD</option>
+                        <option value="ExternalPROD">External PROD</option>
+                        <option value="FirstPartyPROD">FirstParty PROD</option>
+                        <option value="Stage">Stage</option>
+                        <option value="Test">Test</option>
+                    </select>
                 </div>
                 <div className="Namespace">
                     <label className="form__label" for="Namespace">Namespace : </label>
@@ -141,29 +134,25 @@ function InputForms() {
                     <label className="form__label" for="EventName">Event Name : </label>
                     <input className="form__input" type="text"  id="EventName" value={EventName} onChange = {(e) => handleInputChange(e)} placeholder="Event Name"/>
                 </div>
-                <div className="ColumnName">
-                    <label className="form__label" for="ColumnName">Column Name : </label>
-                    <input className="form__input" type="text" id="ColumnName" value={ColumnName} onChange = {(e) => handleInputChange(e)} placeholder="Column Name"/>
+                <div className="ServiceName">
+                    <label className="form__label" for="ServiceName">Service Name Column : </label>
+                    <input className="form__input" type="text" id="ServiceName" value={ServiceName} onChange = {(e) => handleInputChange(e)} placeholder="Service Name Column"/>
                 </div>
-                <div className="ServiceFormat">
-                    <label className="form__label" for="ServiceFormat">Service Format : </label>
-                    <input className="form__input" type="text" id="ServiceFormat" value={ServiceFormat} onChange = {(e) => handleInputChange(e)} placeholder="Service Format"/>
+                <div className="APIName">
+                    <label className="form__label" for="APIName">API Name Column : </label>
+                    <input className="form__input" type="text" id="APIName" value={APIName} onChange = {(e) => handleInputChange(e)} placeholder="API Name Column"/>
                 </div>
-                <div className="SystemIdColumnName">
-                    <label className="form__label" for="SystemIdColumnName">System Id Column Name : </label>
-                    <input className="form__input" type="text" id="SystemIdColumnName" value={SystemIdColumnName} onChange = {(e) => handleInputChange(e)} placeholder="System ID Column Name"/>
+                <div className="ExternalServiceName">
+                    <label className="form__label" for="ExternalServiceName">External Service Name Column : </label>
+                    <input className="form__input" type="text" id="ExternalServiceName" value={ExternalServiceName} onChange = {(e) => handleInputChange(e)} placeholder="External Service Name Column"/>
                 </div>
-                <div className="ExternalIdColumnName">
-                    <label className="form__label" for="ExternalIdColumnName">External Id Column Name : </label>
-                    <input className="form__input" type="text" id="ExternalIdColumnName" value={ExternalIdColumnName} onChange = {(e) => handleInputChange(e)} placeholder="External ID Column Name"/>
+                <div className="ExternalAPIName">
+                    <label className="form__label" for="ExternalAPIName">External API Name Column : </label>
+                    <input className="form__input" type="text" id="ExternalAPIName" value={ExternalAPIName} onChange = {(e) => handleInputChange(e)} placeholder="External API Name Column"/>
                 </div>
-                <div className="RepititiveTaskId">
-                    <label className="form__label" for="RepititiveTaskId">Repititive Task ID : </label>
-                    <input className="form__input" type="text" id="RepititiveTaskId" value={RepititiveTaskId} onChange = {(e) => handleInputChange(e)} placeholder="Repititive Task ID "/>
-                </div>
-                <div className="TimeStampWindow">
-                    <label className="form__label" for="TimeStampWindow">Timestamp Window : </label>
-                    <input className="form__input" type="datetime-local" value={TimeStampWindow} onChange = {(e) => handleInputChange(e)} id="TimeStampWindow"/>
+                <div className="ExternalCallType">
+                    <label className="form__label" for="ExternalCallType">External Call Type Column : </label>
+                    <input className="form__input" type="text" id="ExternalCallType" value={ExternalCallType} onChange = {(e) => handleInputChange(e)} placeholder="External Call Type Column "/>
                 </div>
                 <div className="Certificate">
                     <label className="form__label" for="Certificate">Certificate : </label>
@@ -171,7 +160,7 @@ function InputForms() {
                 </div>
             </div>
             <div class="footer">
-                <button type="submit" class="btn" onClick={()=>handleSubmit()} >Register</button>
+                <button type="submit" class="btn btn2" onClick={()=>handleSubmit()} >Register</button>
             </div>
         </div>      
         </>
