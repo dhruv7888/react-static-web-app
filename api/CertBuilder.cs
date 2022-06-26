@@ -29,7 +29,6 @@ using Microsoft.Azure.WebJobs.Host;
 
 namespace api
 {
-
     public static class CertBuilder
     {
         [FunctionName("CertBuilder")]
@@ -37,47 +36,41 @@ namespace api
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            //try
-            //{
-            log.LogInformation("C# HTTP trigger function processed CertBuilder request.");
-            string content = await new StreamReader(req.Body).ReadToEndAsync();
-            log.LogInformation("content is " + content);
-            //Console.WriteLine("Content: "+content);
-            throw new Exception(content);
-            String[] separator = { "," };
-            String[] strlist = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-            strlist[0]=strlist[0].Trim();
-            string converted = strlist[0].Replace('-', '+');
-            converted = converted.Replace('_', '/');
-            X509Certificate2 cert = ImportCertFromBase64(converted, "");
-            // foreach(string s in strlist)
-            //    Console.WriteLine(s);
-            log.LogInformation("Trying to access keyvault");
-            string vaultUrl = "https://dkg7888.vault.azure.net/";
-            var client = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
-            log.LogInformation("Certificate Client created");
-            var tempPw = "password";
-            var tmpPolicy = new CertificatePolicy(WellKnownIssuerNames.Self, cert.Subject);
-            tmpPolicy.ContentType = CertificateContentType.Pkcs12;
-            tmpPolicy.Exportable = true;
-            tmpPolicy.KeySize = cert.PrivateKey.KeySize;
-            string nameOfCert = cert.Subject;
-
-            log.LogInformation("Staring IMporting ");
-            var result = client.ImportCertificate(new ImportCertificateOptions(strlist[1], cert.Export(X509ContentType.Pfx, tempPw))
+            try
             {
-                Password = tempPw,
-                Policy = tmpPolicy
-            });
+                log.LogInformation("C# HTTP trigger function processed CertBuilder request.");
+                string content = await new StreamReader(req.Body).ReadToEndAsync();
+                log.LogInformation("content is " + content);
+                //Console.WriteLine("Content: "+content);
+                String[] separator = { "," };
+                String[] strlist = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                X509Certificate2 cert = ImportCertFromBase64(strlist[0], "");
+                log.LogInformation("Trying to access keyvault");
+                string vaultUrl = "https://dkg7888.vault.azure.net/";
+                var client = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
+                log.LogInformation("Certificate Client created");
+                var tempPw = "password";
+                var tmpPolicy = new CertificatePolicy(WellKnownIssuerNames.Self, cert.Subject);
+                tmpPolicy.ContentType = CertificateContentType.Pkcs12;
+                tmpPolicy.Exportable = true;
+                tmpPolicy.KeySize = cert.PrivateKey.KeySize;
+                string nameOfCert = cert.Subject;
 
-            log.LogInformation("IMporting Completed");
-            //log.LogInformation("Name is " + cert.Subject);
-            //log.LogInformation("Thumbprint is " + cert.Thumbprint);
-            /*}/*
+                log.LogInformation("Staring IMporting ");
+                var result = client.ImportCertificate(new ImportCertificateOptions(strlist[1], cert.Export(X509ContentType.Pfx, tempPw))
+                {
+                    Password = tempPw,
+                    Policy = tmpPolicy
+                });
+
+                log.LogInformation("IMporting Completed");
+                //log.LogInformation("Name is " + cert.Subject);
+                //log.LogInformation("Thumbprint is " + cert.Thumbprint);
+            }
             catch (Exception ex)
             {
                 log.LogInformation(ex.ToString());
-            }*/
+            }
             return new OkObjectResult("OK");
         }
         public static X509Certificate2 ImportCertFromBase64(string rawCert, string password)

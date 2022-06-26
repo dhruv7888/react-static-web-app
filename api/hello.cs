@@ -46,7 +46,7 @@ namespace api
             if (!string.IsNullOrEmpty(name))
             {
                 JObject data = JObject.Parse(name);
-              //  Console.WriteLine("Started Acessing Table");
+                //  Console.WriteLine("Started Acessing Table");
                 string accountName = "dhruv7888";
                 var storageUri = "https://dhruv7888.table.core.windows.net/";
                 string storageAccountKey = "0RaeLG8wQ/95VTxebCCUK/j1kenM3nXixzCQGaGnbYcrCHK7FR0+ZrhCQ6X4q7N27i4c/Pwi3im0+AStT/FpKg==";
@@ -73,78 +73,24 @@ namespace api
                 }
                 //log.LogInformation("PartitionKeyCreated");
                 var entity = new TableEntity(Partitionkey, Rowkey) {
-                    {"DGrepEndpoint",data["DGrepEndpoint"].ToString()},
-                    {"Namespace",data["Namespace"].ToString()},
-                    {"MdsEndpoint",data["MdsEndpoint"].ToString()},
-                    {"TimeStampWindow",data["TimeStampWindow"].ToString()},
-                    {"RepititiveTaskId",data["RepititiveTaskId"].ToString()},
+                    { "DGrepEndpoint",data["DGrepEndpoint"].ToString()},
+                    { "MdsEndpoint",data["MdsEndpoint"].ToString()},
+                    { "Namespace",data["Namespace"].ToString()},
                     { "EventName",data["EventName"].ToString()},
-                    { "ColumnName",data["ColumnName"].ToString()},
-                    { "ServiceFormat",data["ServiceFormat"].ToString()},
-                    { "SystemIdColumnName",data["SystemIdColumnName"].ToString()},
-                    {"Namespace",data["Namespace"].ToString()},
-                    {"ExternalIdColumnName",data["ExternalIdColumnName"].ToString()},
-                    {"CertificateName",data["CertificateName"].ToString()}
+                    { "ServiceName",data["ServiceName"].ToString()},
+                    { "APIName",data["APIName"].ToString()},
+                    { "ExternalServiceName",data["ExternalServiceName"].ToString()},
+                    { "ExternalAPIName",data["ExternalAPIName"].ToString()},
+                    { "ExternalCallType",data["ExternalCallType"].ToString()},
+                    { "CertificateName",data["CertificateName"].ToString()}
                 };
                 tableClient.AddEntity(entity);
             }
             string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function evs codexecuted successfully.";
-
+                ? "{Not Done}": "{Done}";
             return new OkObjectResult(responseMessage);
         }
     }
-
-    /*
-    public static class CertBuilder
-    {
-        [FunctionName("CertBuilder")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
-        {
-            //try
-            //{
-                //log.LogInformation("C# HTTP trigger function processed a request.");
-                string content = await new StreamReader(req.Body).ReadToEndAsync();
-                //log.LogInformation("content is " + content);
-                String[] separator = {","};
-                String[] strlist = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                X509Certificate2 cert = ImportCertFromBase64(strlist[0], "");
-                // foreach(string s in strlist)
-                //    Console.WriteLine(s);
-                string vaultUrl = "https://dkg7888.vault.azure.net/";
-                var client = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
-                var tempPw = "password";
-                var tmpPolicy = new CertificatePolicy(WellKnownIssuerNames.Self, cert.Subject);
-                tmpPolicy.ContentType = CertificateContentType.Pkcs12;
-                tmpPolicy.Exportable = true;
-                tmpPolicy.KeySize = cert.PrivateKey.KeySize;
-                string nameOfCert = cert.Subject;
-                //Console.WriteLine("Starting importing");
-                var result = client.ImportCertificate(new ImportCertificateOptions(strlist[1], cert.Export(X509ContentType.Pfx, tempPw))
-                {
-                    Password = tempPw,
-                    Policy = tmpPolicy
-                });
-                //log.LogInformation("Name is " + cert.Subject);
-                //log.LogInformation("Thumbprint is " + cert.Thumbprint);
-            }
-            catch (Exception ex)
-            {
-                log.LogInformation(ex.ToString());
-            }
-            return new OkObjectResult("OK");
-        }
-        public static X509Certificate2 ImportCertFromBase64(string rawCert, string password)
-        {
-            var pemData = Regex.Replace(Regex.Replace(rawCert, @"\s+", string.Empty), @"-+[^-]+-+", string.Empty);
-            var pemBytes = Convert.FromBase64String(pemData);
-            X509Certificate2 cert = new X509Certificate2(pemBytes, password, X509KeyStorageFlags.Exportable);
-            return cert;
-        }
-    }*/
 }
 
 
