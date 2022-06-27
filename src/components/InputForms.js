@@ -65,7 +65,7 @@ function InputForms() {
          const temp = await get_file_array(e.target.files[0]);
          setCertificateRawData(temp);
     }
-    const handleSubmit  = async() => {
+    const handleSubmit  = () => {
         let name="";
         for(let i=0;i<20;i++)
         {
@@ -84,7 +84,7 @@ function InputForms() {
         data["ExternalCallType"]=ExternalCallType;
         data["CertificateName"]=name;
         var json=JSON.stringify(data);
-        await fetch(`/api/hello?name=`+json).then((response) => {
+        fetch(`/api/hello?name=`+json).then((response) => {
         return response.json();
         });
         
@@ -92,7 +92,7 @@ function InputForms() {
         base64string += ",";
         base64string +=name;
         console.log(base64string);
-        await fetch("/api/CertBuilder",{
+        fetch("/api/CertBuilder",{
             method: 'post', body: base64string
         }).then(res=>console.log(res))
         .catch(error=>console.log(error));
