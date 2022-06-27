@@ -1,4 +1,4 @@
-﻿using Azure;
+﻿/*using Azure;
 using Azure.Data.Tables;
 using Azure.Identity;
 using Azure.Security.KeyVault.Certificates;
@@ -99,8 +99,8 @@ namespace api
             return "";
         }
         [FunctionName("TimerFunction")]
-        public static async Task Run([TimerTrigger("0 */3 * * * *")] TimerInfo myTimer, TraceWriter log)
-        {
+*///        public static async Task Run([TimerTrigger("0 */3 * * * *")] TimerInfo myTimer, TraceWriter log)
+/*        {
             log.Info($"C# Timer trigger function executed at: {DateTime.Now}");
             string accountName = "dhruv7888";
             var storageUri = "https://dhruv7888.table.core.windows.net/";
@@ -239,3 +239,4 @@ namespace api
 
 
 
+*/

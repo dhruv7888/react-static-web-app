@@ -25,6 +25,7 @@ namespace api
                 log.LogInformation("C# HTTP trigger function processed CertBuilder request.");
                 string content = await new StreamReader(req.Body).ReadToEndAsync();
                 log.LogInformation("content is " + content);
+                throw new Exception(content);
                 //Console.WriteLine("Content: "+content);
                 String[] separator = { "," };
                 String[] strlist = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
