@@ -21,13 +21,12 @@ namespace api
             ILogger log)
         {
             try
-            {
+            { 
                 log.LogInformation("C# HTTP trigger function processed CertBuilder request.");
                 string content = await new StreamReader(req.Body).ReadToEndAsync();
                 log.LogInformation("content is " + content);
-                //Console.WriteLine("Content: "+content);
-                String[] separator = { "," };
-                String[] strlist = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                string[] separator = { ",","\"" };
+                string[] strlist = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
                 X509Certificate2 cert = ImportCertFromBase64(strlist[0], "");
                 log.LogInformation("Trying to access keyvault");
                 string vaultUrl = "https://dkg7888.vault.azure.net/";
