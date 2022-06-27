@@ -15,7 +15,7 @@ function Forms() {
     const [APIName, setAPIName] = useState(null);
     const [View,setView] = useState("EnterDetails");    
     const [Data,setData] = useState(null);
-    const [Json,setJson] = useState(null);
+    const [Node,setNode] = useState(null);
     
     const handleInputChange = (e) => {
         const {id , value} = e.target;
@@ -38,7 +38,7 @@ function Forms() {
             setAPIName(value);
         }      
     }
-    const handleSubmit  = () => {
+    const handleSubmit  = async() => {
         var data={};
         data["DGrepEndpoint"]=DGrepEndpoint;
         data["MdsEndpoint"]=MdsEndpoint;
@@ -46,16 +46,11 @@ function Forms() {
         data["EventName"]=EventName;
         data["ServiceName"]=ServiceName;
         data["APIName"]=APIName;
-        setData([{"Time": "2022-05-31T07:50:04.179Z","Event_name": "Start_EnterpriseReporting.Processor_ProcessCheckPoint","state": ""},{"Time": "2022-05-31T07:50:05.241Z","Event_name": "UpdateCheckpoint_EnterpriseReporting_ImportEnrollmentOperation","state": "Created"},{"Time": "2022-05-31T07:50:05.304Z","Event_name": "UpdateCheckpoint_EnterpriseReporting_ImportEnrollmentOperation","state": "PopulateBillingGroupOwner"},{"Time": "2022-05-31T07:50:04.179Z","Event_name": "Start_EnterpriseReporting.Processor_ProcessCheckPoint","state": ""}]);
-        //setJson(JSON.stringify(Data));
-        /*    fetch(`/api/hello?name=`+json).then((response) => {
-        return response.json();
-        });*/
-        //<ReactFlowRenderer name={json} />
+        var json=JSON.stringify(data);
+        await fetch(`/api/CodeFlow?name=`+json).then((response)=>{return response.json();}).then( data => setData(data)).catch(error=>console.log(error));    
+        setNode([ServiceName,APIName]);
         setView("CodeFlow");
     }
-    console.log(Data);
-    console.log(Json);
     if(View==="EnterDetails")
     {
         return(
@@ -96,12 +91,12 @@ function Forms() {
                         <input className="form__input" type="text"  id="EventName" value={EventName} onChange = {(e) => handleInputChange(e)} placeholder="Event Name"/>
                     </div>
                     <div className="ServiceName">
-                        <label className="form__label" for="ServiceName">Service Name Column : </label>
-                        <input className="form__input" type="text" id="ServiceName" value={ServiceName} onChange = {(e) => handleInputChange(e)} placeholder="Service Name Column"/>
+                        <label className="form__label" for="ServiceName">Service Name : </label>
+                        <input className="form__input" type="text" id="ServiceName" value={ServiceName} onChange = {(e) => handleInputChange(e)} placeholder="Service Name"/>
                     </div>
                     <div className="APIName">
-                        <label className="form__label" for="APIName">API Name Column : </label>
-                        <input className="form__input" type="text" id="APIName" value={APIName} onChange = {(e) => handleInputChange(e)} placeholder="API Name Column"/>
+                        <label className="form__label" for="APIName">API Name : </label>
+                        <input className="form__input" type="text" id="APIName" value={APIName} onChange = {(e) => handleInputChange(e)} placeholder="API Name"/>
                     </div>
                     <div class="footer">
                         <button type="submit" class="btn btn2" onClick={()=>handleSubmit()} >Register</button>
@@ -115,7 +110,7 @@ function Forms() {
     {
         return (<>
         <Header />
-        <ReactFlowRenderer name={Data}/>
+        <ReactFlowRenderer name={Data} parnode={Node}/>
         </>);
     }
 }

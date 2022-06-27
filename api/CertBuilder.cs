@@ -1,31 +1,15 @@
-using System;
-using Azure.Security.KeyVault.Certificates;
 using Azure.Identity;
-using System.Security.Cryptography.X509Certificates;
-using Azure;
-using System.IO;
-using System.Threading.Tasks;
+using Azure.Security.KeyVault.Certificates;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Microsoft.Azure.Monitoring.DGrep.DataContracts.External;
-using Microsoft.Azure.Monitoring.DGrep.SDK;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using Azure.Data.Tables;
-using Microsoft.Azure;
-using Microsoft.Azure.Storage;
-using Azure.Data.Tables.Models;
-using System.Net;
-using System.Net.Http;
+using System;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
-using Microsoft.Azure.WebJobs.Host;
+using System.Threading.Tasks;
 
 namespace api
 {

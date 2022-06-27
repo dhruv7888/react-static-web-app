@@ -1,9 +1,17 @@
-﻿using Azure.Storage.Blobs;
-using Azure.Storage;
-using Azure.Storage.Blobs.Models;
-using Azure.Storage.Blobs.Specialized;
+﻿/*using Azure;
+using Azure.Data.Tables;
+using Azure.Identity;
+using Azure.Security.KeyVault.Certificates;
 using Azure.Security.KeyVault.Secrets;
+using Azure.Storage;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Specialized;
+using Microsoft.Azure.Monitoring.DGrep.DataContracts.External;
+using Microsoft.Azure.Monitoring.DGrep.SDK;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,16 +20,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Azure;
-using Microsoft.Azure.Monitoring.DGrep.DataContracts.External;
-using Microsoft.Azure.Monitoring.DGrep.SDK;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
-using Azure;
-using Azure.Data.Tables;
-using Azure.Security.KeyVault.Certificates;
-using Azure.Identity;
-using Newtonsoft.Json.Linq;
 
 namespace api
 {
@@ -101,8 +99,8 @@ namespace api
             return "";
         }
         [FunctionName("TimerFunction")]
-        public static async Task Run([TimerTrigger("0 */3 * * * *")] TimerInfo myTimer, TraceWriter log)
-        {
+*///        public static async Task Run([TimerTrigger("0 */3 * * * *")] TimerInfo myTimer, TraceWriter log)
+/*        {
             log.Info($"C# Timer trigger function executed at: {DateTime.Now}");
             string accountName = "dhruv7888";
             var storageUri = "https://dhruv7888.table.core.windows.net/";
@@ -191,26 +189,37 @@ namespace api
                     JArray Arr=JArray.Parse(ndata);
                     JArray JsonArray = new JArray(Arr.OrderBy(obj => (DateTime)obj["PreciseTimeStamp"]));
 
-                    var Map = new Dictionary<string, JArray>();
+                    var Map = new Dictionary<string, HashSet<string>>();
+                    var Map2 = new Dictionary<string, JArray>();
                     foreach (JObject Obj in JsonArray)
                     {
                         JObject CurObj = new JObject();
-                        CurObj.Add(ExternalServiceName, Obj[ExternalServiceName]);
-                        CurObj.Add(ExternalAPIName, Obj[ExternalAPIName]);
-                        CurObj.Add(ExternalCallType, Obj[ExternalCallType]);
-                        string key = (Obj[ServiceName].ToString()) + "_______" + (Obj[APIName].ToString());
-                        if(Map.ContainsKey(key))
-                            Map[key].Add(CurObj);
+
+                        CurObj.Add("ExternalServiceName",Obj[ExternalServiceName]);
+                        CurObj.Add("ExternalAPIName", Obj[ExternalAPIName]);
+                        CurObj.Add("ExternalCallType", Obj[ExternalCallType]);
+                        string key = (Obj[ServiceName].ToString()) + "~" + (Obj[APIName].ToString());
+                        string key2 = Obj[ExternalCallType] + "~" + Obj[ExternalAPIName] + "~" + Obj[ExternalServiceName];
+                        if (Map.ContainsKey(key))
+                        {
+                            if (!(Map[key].Contains(key2)))
+                            {
+                                Map2[key].Add(CurObj);
+                                Map[key].Add(key2);
+                            }
+                        }
                         else
                         {
-                            Map.Add(key,new JArray());
-                            Map[key].Add(CurObj);
+                            Map.Add(key, new HashSet<string>());
+                            Map2.Add(key, new JArray());
+                            Map[key].Add(key2);
+                            Map2[key].Add(CurObj);
                         }
                     }
-                    string nam = Namespace + "_______" + EventName;
-                    foreach (KeyValuePair<string, JArray> pair in Map)
+                    string nam = Namespace + "~" + EventName;
+                    foreach (KeyValuePair<string, JArray> pair in Map2)
                     {
-                        string FileName=nam+ "_______"+pair.Key+".json";
+                        string FileName=nam+ "~"+pair.Key+".json";
                         string ToStore =pair.Value.ToString();
                         MemoryStream mStrm = new MemoryStream(Encoding.UTF8.GetBytes(ToStore));
                         Console.WriteLine(FileName);
@@ -231,3 +240,4 @@ namespace api
 
 
 
+*/

@@ -26,7 +26,7 @@ charactersLength));
 function ReactFlowRenderer(props) {
   console.log(props.name);
  //const elements=JSON.parse(props.name);
-  
+  console.log(typeof(props.name));
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   var loc =80;
@@ -51,8 +51,8 @@ function ReactFlowRenderer(props) {
 
   const addNode=(name)=>{
     setNodes((nds) => nds.concat({
-      id: name[2],
-      data: { label: <div><p>{name[0]}<br/>{name[1]}</p></div> },
+      id: name[3],
+      data: { label: <div><p>{name[0]}<br/>{name[1]}<br/>{name[2]}</p></div> },
       position: {
         x: loc*cnt,
         y: loc*cnt++,
@@ -61,7 +61,7 @@ function ReactFlowRenderer(props) {
         background: "#D6D5E6",
         color: "#333",
         border: "1px solid #222138",
-        width: 350,
+        width: 200,
         height: 50,
       },    
     }));
@@ -79,29 +79,19 @@ function ReactFlowRenderer(props) {
   };
 
   const elements=props.name;
-  
+  const node=props.parnode;
   const GetNodes=()=>{
-    var hashmap = new Map();
-    var prev="";
-    var cnt=0;
+    let parid=Identity();
+    let parkey=[node[0],node[1],"",parid];
+    addNode(parkey);
     elements.map((item)=>
-      {
-        let key1=item.Event_name+"_"+item.state;
-        if (!(hashmap.has(key1)))
-        {
-          hashmap.set(key1,Identity());
-          let key=[item.Event_name,item.state,hashmap.get(key1)];
-          addNode(key);
-        }
-        if(cnt!==0)
-        {
-          let ed=[hashmap.get(prev),hashmap.get(key1)];
-          addEdges(ed);
-        }
-        cnt++;
-        prev=key1;
-      });
-    console.log(hashmap);
+    {
+      let id=Identity();
+      let key=[item.ExternalAPIName,item.ExternalCallType,item.ExternalServiceName,id];
+      addNode(key);
+      let ed=[parid,id];
+      addEdges(ed);
+    });
   }
   console.log(edges);
 
