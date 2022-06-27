@@ -9,7 +9,7 @@ import Header from './Header.js';
 function InputForms() {
 
     const [DGrepEndpoint, setDGrepEndpoint] = useState("PublicCloud");
-    const [MdsEndpoint, setMdsEndpoint] = useState("BillingPROD");
+    const [MdsEndpoint, setMdsEndpoint] = useState("BlackForest");
     const [Namespace, setNamespace] = useState(null);
     const [EventName,setEventName] = useState(null);
     const [ServiceName,setServiceName] = useState(null);
