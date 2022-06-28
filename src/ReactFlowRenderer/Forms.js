@@ -47,9 +47,9 @@ function Forms() {
         data["ServiceName"]=ServiceName;
         data["APIName"]=APIName;
         var json=JSON.stringify(data);
-        await fetch(`/api/CodeFlow?name=`+json).then((response)=>{return response.json();}).then( data => setData(data)).catch(error=>console.log(error));    
+        await fetch(`/api/DesignFlow?details=`+json).then((response)=>{return response.json();}).then( data => setData(data)).catch(error=>console.log(error));    
         setNode([ServiceName,APIName]);
-        setView("CodeFlow");
+        setView("DesignFlow");
     }
     if(View==="EnterDetails")
     {
@@ -106,7 +106,7 @@ function Forms() {
         </>
         );
     }
-    else if(View==="CodeFlow")
+    else if(View==="DesignFlow")
     {
         return (<>
         <Header />

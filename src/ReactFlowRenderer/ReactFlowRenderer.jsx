@@ -27,10 +27,32 @@ function ReactFlowRenderer(props) {
   console.log(props.name);
  //const elements=JSON.parse(props.name);
   console.log(typeof(props.name));
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  var loc =80;
+  
+  const elements=props.name;
+  const node=props.parnode;
+  
+  var locy =70;
+  let locx=120;
   var cnt=1;
+  
+  const [nodes, setNodes, onNodesChange] = useNodesState([
+  {
+    id: "PARID",
+    data: { label: <div><p>{node[0]}<br/>{node[1]}</p></div> },
+    position: {
+      x: (elements.length)*60+240,
+      y: locy*cnt++,
+    },
+    style: {
+      background: "#D6D5E6",
+      color: "#333",
+      border: "1px solid #222138",
+      width: 200,
+      height: 50,
+    },    
+  }]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  
 
    const onConnect = useCallback(
     (params) =>
@@ -54,8 +76,8 @@ function ReactFlowRenderer(props) {
       id: name[3],
       data: { label: <div><p>{name[0]}<br/>{name[1]}<br/>{name[2]}</p></div> },
       position: {
-        x: loc*cnt,
-        y: loc*cnt++,
+        x: locx*cnt,
+        y: locy*cnt++,
       },
       style: {
         background: "#D6D5E6",
@@ -78,18 +100,13 @@ function ReactFlowRenderer(props) {
     }));
   };
 
-  const elements=props.name;
-  const node=props.parnode;
   const GetNodes=()=>{
-    let parid=Identity();
-    let parkey=[node[0],node[1],"",parid];
-    addNode(parkey);
     elements.map((item)=>
     {
       let id=Identity();
       let key=[item.ExternalAPIName,item.ExternalCallType,item.ExternalServiceName,id];
       addNode(key);
-      let ed=[parid,id];
+      let ed=["PARID",id];
       addEdges(ed);
     });
   }

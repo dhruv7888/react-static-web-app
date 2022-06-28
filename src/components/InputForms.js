@@ -84,7 +84,7 @@ function InputForms() {
         data["ExternalCallType"]=ExternalCallType;
         data["CertificateName"]=name;
         var json=JSON.stringify(data);
-        fetch(`/api/hello?name=`+json).then((response) => {
+        fetch(`/api/TableData?details=`+json).then((response) => {
         return response.json();
         });
         
