@@ -160,7 +160,7 @@ function InputForms() {
                 </div>
             </div>
             <div class="footer">
-                <button type="submit" class="btn btn2" onClick={()=>handleSubmit()} >Register</button>
+                <button type="submit" class="btn btn2" onClick={()=>handleSubmit()} >Submit</button>
             </div>
         </div>      
         </>

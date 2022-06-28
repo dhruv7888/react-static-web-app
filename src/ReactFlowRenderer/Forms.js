@@ -99,7 +99,7 @@ function Forms() {
                         <input className="form__input" type="text" id="APIName" value={APIName} onChange = {(e) => handleInputChange(e)} placeholder="API Name"/>
                     </div>
                     <div class="footer">
-                        <button type="submit" class="btn btn2" onClick={()=>handleSubmit()} >Register</button>
+                        <button type="submit" class="btn btn2" onClick={()=>handleSubmit()} >Submit</button>
                     </div>
                 </div>
             </div>  
