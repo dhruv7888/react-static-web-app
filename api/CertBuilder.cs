@@ -22,37 +22,37 @@ namespace api
         {
             try
             { 
-                log.LogInformation("C# HTTP trigger function processed CertBuilder request.");
+                log.LogInformation("C# HTTP trigger function started processing CertBuilder request.");
                 string content = await new StreamReader(req.Body).ReadToEndAsync();
-                log.LogInformation("content is " + content);
+                log.LogInformation("Content is " + content);
                 string[] separator = { ",","\"" };
-                string[] strlist = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                X509Certificate2 cert = ImportCertFromBase64(strlist[0], "");
-                log.LogInformation("Trying to access keyvault");
+                string[] strList = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                X509Certificate2 cert = ImportCertFromBase64(strList[0], "");
+                
+                log.LogInformation("Trying to access keyvault and Creating Certificate Client");
                 string vaultUrl = "https://dkg7888.vault.azure.net/";
-                var client = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
+                var CertClient = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
                 log.LogInformation("Certificate Client created");
-                var tempPw = "password";
-                var tmpPolicy = new CertificatePolicy(WellKnownIssuerNames.Self, cert.Subject);
-                tmpPolicy.ContentType = CertificateContentType.Pkcs12;
-                tmpPolicy.Exportable = true;
-                tmpPolicy.KeySize = cert.PrivateKey.KeySize;
+                
+                var certPassword = "password";
+                var certPolicy = new CertificatePolicy(WellKnownIssuerNames.Self, cert.Subject);
+                certPolicy.ContentType = CertificateContentType.Pkcs12;
+                certPolicy.Exportable = true;
+                certPolicy.KeySize = cert.PrivateKey.KeySize;
                 string nameOfCert = cert.Subject;
 
-                log.LogInformation("Staring IMporting ");
-                var result = client.ImportCertificate(new ImportCertificateOptions(strlist[1], cert.Export(X509ContentType.Pfx, tempPw))
+                log.LogInformation("Starting Importing Certificate");
+                var Result = CertClient.ImportCertificate(new ImportCertificateOptions(strList[1], cert.Export(X509ContentType.Pfx, certPassword))
                 {
-                    Password = tempPw,
-                    Policy = tmpPolicy
+                    Password = certPassword,
+                    Policy = certPolicy
                 });
-
-                log.LogInformation("IMporting Completed");
-                //log.LogInformation("Name is " + cert.Subject);
-                //log.LogInformation("Thumbprint is " + cert.Thumbprint);
+                log.LogInformation("Certificate Imported");
+            
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                log.LogInformation(ex.ToString());
+                log.LogInformation(exception.ToString());
             }
             return new OkObjectResult("OK");
         }

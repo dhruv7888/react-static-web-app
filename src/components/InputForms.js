@@ -92,7 +92,7 @@ function InputForms() {
         base64string += ",";
         base64string +=name;
         console.log(base64string);
-        fetch("/api/CertBuilder",{
+        fetch("https://api20220617072943.azurewebsites.net/api/CertBuilder",{
             method: 'post', body: base64string
         }).then(res=>console.log(res))
         .catch(error=>console.log(error));
